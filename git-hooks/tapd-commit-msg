@@ -1,0 +1,103 @@
+#!/bin/bash
+
+# 分支名  | commit 格式 | 绑定TAPD
+# --- | --- | ---
+# tapd-S1234  | #S1234, message  | story 1234
+# tapd-B1234  | #B1234, message  | bug 1234
+# tapd-T1234   | #T1234, message  | task 1234
+
+COMMIT_MSG_FILE=$1
+
+BRANCH_PREFIX="tapd-"
+BRANCH_REX="$BRANCH_PREFIX[STB]{1}[0-9]+(-.*)?"
+
+findTypeIdFromBranch() {
+  local BRANCH=$(git branch | grep '*' | sed 's/* //')
+  if [[ ! "$BRANCH" =~ $BRANCH_REX ]]; then
+    return 1
+  fi
+  local TYPE_ID=$(echo $BRANCH | tr -d $BRANCH_PREFIX | grep -Eo '^[SBT]{1}[0-9]+')
+  findTypeId $TYPE_ID
+}
+
+findTypeIdFromMsg() {
+  local MSG=$1
+  local TYPE_ID=$(echo $MSG | tr -cd '^(\#S|\#B|\#T)[0-9]+')
+  if [ -z $TYPE_ID ]; then
+    return 1
+  fi
+  TYPE_ID=$(echo ${TYPE_ID: 1})
+
+  findTypeId $TYPE_ID
+}
+
+findTypeId() {
+  local TYPE_ID=$1
+  if [ ${#TYPE_ID} -lt 1 ]; then
+    return 1
+  fi
+
+  TYPE_CHAR=$(echo ${TYPE_ID: 0: 1})
+  ID=$(echo ${TYPE_ID: 1})
+
+  case "$TYPE_CHAR" in
+    S) TYPE="story"
+    ;;
+    T) TYPE="task"
+    ;;
+    B) TYPE="bug"
+    ;;
+    *)
+      return 1
+    ;;
+  esac
+}
+
+exitIfIssueBranch() {
+  local BRANCH=($(git branch | grep '*' | sed 's/* //'))
+  if [[ "$BRANCH" =~ issue-[0-9]+ ]]; then
+    exit
+  fi
+}
+
+ORIGIN_COMMIT_MSG=$(cat $COMMIT_MSG_FILE)
+COMMIT_MSG=$ORIGIN_COMMIT_MSG
+
+MSG_HAS_PREFIX=true
+
+findTypeIdFromMsg $COMMIT_MSG
+FAIL=$?
+
+if [ $FAIL -eq 1 ]; then
+  MSG_HAS_PREFIX=false
+  findTypeIdFromBranch
+  FAIL=$?
+fi
+
+if [ $FAIL -eq 1 ]; then
+  echo "ERROR: The format of branch name and commit message is incorrect."
+  echo "The format of branch should be ${BRANCH_PREFIX}[STB]<tapdId> (example: ${BRANCH_PREFIX}S12345);"
+  echo "Or the commit message should start with #[STB]<tapdId> (example: #S12345, message)."
+  # 格式不符合，中止提交
+  exit 1
+fi
+
+# --- 判断必要环境变量 ---
+
+if [ -z $TAPD_USERNAME ]; then
+  echo "ERROR: environment value TAPD_USERNAME is required."
+  echo "You can config with the following commands. (replace [yourname] with your name in Tapd.)"
+  printf "\n\t%s\n\t%s\n\n" "echo -e '\nexport TAPD_USERNAME=\"[yourname]\"' >> ~/.bash_profile" "source ~/.bash_profile"
+  exit 1
+fi
+
+# --- 增加前缀 ----
+
+if ! $MSG_HAS_PREFIX ; then
+  COMMIT_MSG="#$TYPE_CHAR$ID, $COMMIT_MSG"
+fi
+
+# --- 增加TAPD关联 ---
+
+echo "$COMMIT_MSG" > "$COMMIT_MSG_FILE"
+echo -e "\n\n--$TYPE=$ID --user=$TAPD_USERNAME" >> "$COMMIT_MSG_FILE"
