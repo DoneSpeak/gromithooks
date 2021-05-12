@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# 分支名  | commit 格式 
+# --- | --- 
+# tapd-S1234  | #S1234, message
+# tapd-B1234  | #B1234, message
+# tapd-T1234  | #T1234, message
+
+COMMIT_MSG_FILE=$1
+
+BRANCH_PREFIX="tapd-"
+BRANCH_REX="$BRANCH_PREFIX[STB]{1}[0-9]+(-.*)?"
+TAPD_MSG_PREFIX_REX="#[STB]{1}[0-9]+(-.*)?"
+
+findTypeIdFromBranch() {
+  local BRANCH=$(git branch | grep '*' | sed 's/* //')
+  if [[ ! "$BRANCH" =~ $BRANCH_REX ]]; then
+    return 1
+  fi
+  local TYPE_ID=$(echo $BRANCH | tr -d $BRANCH_PREFIX | grep -Eo '^[SBT]{1}[0-9]+')
+  findTypeId $TYPE_ID
+}
+
+findTypeId() {
+  local TYPE_ID=$1
+  if [ ${#TYPE_ID} -lt 1 ]; then
+    return 1
+  fi
+
+  TYPE_CHAR=$(echo ${TYPE_ID: 0: 1})
+  ID=$(echo ${TYPE_ID: 1})
+
+  case "$TYPE_CHAR" in
+    S) TYPE="story"
+    ;;
+    T) TYPE="task"
+    ;;
+    B) TYPE="bug"
+    ;;
+    *)
+      return 1
+    ;;
+  esac
+}
+
+ORIGIN_COMMIT_MSG=$(cat $COMMIT_MSG_FILE)
+COMMIT_MSG=$ORIGIN_COMMIT_MSG
+
+if [[ $COMMIT_MSG =~ $TAPD_MSG_PREFIX_REX.* ]]; then
+  exit 0
+fi
+
+findTypeIdFromBranch
+FAIL=$?
+
+if [ $FAIL -eq 1 ]; then
+    exit 0
+fi
+
+# --- 增加前缀 ----
+
+COMMIT_MSG="#$TYPE_CHAR$ID, $COMMIT_MSG"
+
+echo "$COMMIT_MSG" > "$COMMIT_MSG_FILE"

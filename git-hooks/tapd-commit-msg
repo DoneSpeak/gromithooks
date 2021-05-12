@@ -10,6 +10,8 @@ COMMIT_MSG_FILE=$1
 
 BRANCH_PREFIX="tapd-"
 BRANCH_REX="$BRANCH_PREFIX[STB]{1}[0-9]+(-.*)?"
+TAPD_REFER_REX="--(story|task|bug)=[0-9]+[ ]+--user="
+TAPD_REFER_MSG_REX=".*$TAPD_REFER_REX.*"
 
 findTypeIdFromBranch() {
   local BRANCH=$(git branch | grep '*' | sed 's/* //')
@@ -53,48 +55,37 @@ findTypeId() {
   esac
 }
 
-exitIfIssueBranch() {
-  local BRANCH=($(git branch | grep '*' | sed 's/* //'))
-  if [[ "$BRANCH" =~ issue-[0-9]+ ]]; then
-    exit
-  fi
-}
-
 ORIGIN_COMMIT_MSG=$(cat $COMMIT_MSG_FILE)
 COMMIT_MSG=$ORIGIN_COMMIT_MSG
 
-MSG_HAS_PREFIX=true
+# --- 如果已经添加关联，则不做处理 ---
+if [[ $COMMIT_MSG =~ $TAPD_REFER_MSG_REX ]]; then
+  exit 0
+fi
 
 findTypeIdFromMsg $COMMIT_MSG
 FAIL=$?
 
 if [ $FAIL -eq 1 ]; then
-  MSG_HAS_PREFIX=false
   findTypeIdFromBranch
   FAIL=$?
 fi
 
 if [ $FAIL -eq 1 ]; then
-  echo "ERROR: The format of branch name and commit message is incorrect."
+  echo "WARN: The format of branch name and commit message is incorrect."
   echo "The format of branch should be ${BRANCH_PREFIX}[STB]<tapdId> (example: ${BRANCH_PREFIX}S12345);"
   echo "Or the commit message should start with #[STB]<tapdId> (example: #S12345, message)."
   # 格式不符合，中止提交
-  exit 1
+  exit 0
 fi
 
 # --- 判断必要环境变量 ---
 
 if [ -z $TAPD_USERNAME ]; then
-  echo "ERROR: environment value TAPD_USERNAME is required."
-  echo "You can config with the following commands. (replace [yourname] with your name in Tapd.)"
+  echo "WARN: environment value TAPD_USERNAME is required."
+  echo "You can config with the following commands. (Replace [yourname] with your name in Tapd. Using .zshrc instead of .bash_profile if zsh)"
   printf "\n\t%s\n\t%s\n\n" "echo -e '\nexport TAPD_USERNAME=\"[yourname]\"' >> ~/.bash_profile" "source ~/.bash_profile"
-  exit 1
-fi
-
-# --- 增加前缀 ----
-
-if ! $MSG_HAS_PREFIX ; then
-  COMMIT_MSG="#$TYPE_CHAR$ID, $COMMIT_MSG"
+  exit 0
 fi
 
 # --- 增加TAPD关联 ---
