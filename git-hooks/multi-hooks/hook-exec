@@ -1,0 +1,13 @@
+#!/bin/bash
+
+HOOK_DIR=$(dirname "$0")
+GLOBAL_HOOK="$HOOK_DIR/global/$HOOK_NAME"
+CUSTOM_HOOK="$HOOK_DIR/custom/$HOOK_NAME"
+
+if [ -f "$GLOBAL_HOOK" ]; then
+    source $GLOBAL_HOOK
+fi
+
+if [ -f  "$CUSTOM_HOOK" ]; then
+    source $CUSTOM_HOOK
+fi

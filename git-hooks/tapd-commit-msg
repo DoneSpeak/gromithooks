@@ -92,3 +92,5 @@ fi
 
 echo "$COMMIT_MSG" > "$COMMIT_MSG_FILE"
 echo -e "\n\n--$TYPE=$ID --user=$TAPD_USERNAME" >> "$COMMIT_MSG_FILE"
+
+exec ./after-hook commit-msg
