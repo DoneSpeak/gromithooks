@@ -2,8 +2,4 @@
 
 HOOK_NAME=$(echo $0 | sed 's/.*\///')
 
-COMMIT_MSG_FILE=$1
-COMMIT_SOURCE=$2
-SHA1=$3
-
-source $(dirname "$0")/hook-exec $HOOK_NAME
+source $(dirname "$0")/hook-exec $@ $@
