@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# 分支名  | commit 格式 
+# --- | --- 
+# issue-1234  | #1234, message
+
+COMMIT_MSG_FILE=$1
+
+BRANCH_PREFIX="issue-"
+BRANCH_REX="$BRANCH_PREFIX{1}[0-9]+(-.*)?"
+TAPD_MSG_PREFIX_REX="#{1}[0-9]+(-.*)?"
+
+findIssueIdFromBranch() {
+  local BRANCH=$(git branch | grep '*' | sed 's/* //')
+  if [[ ! "$BRANCH" =~ $BRANCH_REX ]]; then
+    return 1
+  fi
+  ISSUE_ID=$(echo $BRANCH | tr -d $BRANCH_PREFIX | grep -Eo '^[0-9]+')
+}
+
+ORIGIN_COMMIT_MSG=$(cat $COMMIT_MSG_FILE)
+COMMIT_MSG=$ORIGIN_COMMIT_MSG
+
+# --- 如果已经添加前缀，则不做处理 ---
+if [[ $COMMIT_MSG =~ $TAPD_MSG_PREFIX_REX.* ]]; then
+  exit 0
+fi
+
+findIssueIdFromBranch
+FAIL=$?
+
+if [ $FAIL -eq 1 ]; then
+    echo "WARN: The branch name format shoud be ${BRANCH_PREFIX}<issue number>, example ${BRANCH_PREFIX}100011"
+    # 强制格式，则可以`exit 1`以执行失败
+    exit 0
+fi
+
+# --- 增加前缀 ----
+
+COMMIT_MSG="#$ISSUE_ID, $COMMIT_MSG"
+
+echo "$COMMIT_MSG" > "$COMMIT_MSG_FILE"

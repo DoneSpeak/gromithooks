@@ -46,6 +46,7 @@ findTypeId() {
 ORIGIN_COMMIT_MSG=$(cat $COMMIT_MSG_FILE)
 COMMIT_MSG=$ORIGIN_COMMIT_MSG
 
+# --- 如果已经添加前缀，则不做处理 ---
 if [[ $COMMIT_MSG =~ $TAPD_MSG_PREFIX_REX.* ]]; then
   exit 0
 fi
@@ -54,6 +55,8 @@ findTypeIdFromBranch
 FAIL=$?
 
 if [ $FAIL -eq 1 ]; then
+    echo "WARN: The branch name format shoud be ${BRANCH_PREFIX}<issue number>, example ${BRANCH_PREFIX}100011"
+    # 强制格式，则可以`exit 1`以执行失败
     exit 0
 fi
 
