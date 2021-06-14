@@ -1,0 +1,8 @@
+# 该项目为一个pre-commit hooks仓库项目，对外提供hooks
+
+- id: pcm-issue-ref-prefix
+  name: Add issue reference prefix for commit msg
+  description: Add issue reference prefix for commit msg to link commit and issue
+  entry: pcm-issue-ref-prefix
+  # 实现hook所使用的语言
+  language: python

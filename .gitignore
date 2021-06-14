@@ -39,3 +39,16 @@ replay_pid*.log
 .DS_Store
 spring.log
 
+### python
+
+*.egg-info
+*.py[co]
+.*.sw[a-z]
+.coverage
+.tox
+.venv.touch
+/.mypy_cache
+/.pytest_cache
+/venv*
+coverage-html
+dist
