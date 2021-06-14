@@ -28,12 +28,17 @@ repos:
     # https://github.com/macisamuele/language-formatters-pre-commit-hooks/blob/v2.0.0/language_formatters_pre_commit_hooks/pretty_format_yaml.py
     # hook脚本需要的参数，可以在该hook脚本文件中看到
     args: [--autofix, --indent, '2']
-- repo: https://github.com/jumanjihouse/pre-commit-hooks
-  rev: 2.1.5
+# - repo: https://github.com/jumanjihouse/pre-commit-hooks
+#   rev: 2.1.5
+#   hooks:
+#   # 需要安装 https://github.com/koalaman/shellcheck
+#   # brew install shellcheck
+#   - id: shellcheck
+#     # 排除文件
+#     exclude: git-hooks/multi-hooks/global/.*\.sample
+- repo: https://github.com/DoneSpeak/gromithooks
+  rev: main
   hooks:
-  # 需要安装 https://github.com/koalaman/shellcheck
-  # brew install shellcheck
-  - id: shellcheck
-    # 排除文件
-    exclude: git-hooks/multi-hooks/global/.*\.sample
-
+  - id: pcm-issue-ref-prefix
+    # 指定hook执行的阶段
+    stages: [prepare-commit-msg]

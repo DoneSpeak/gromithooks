@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# 分支名  | commit 格式 
-# --- | --- 
+# 分支名  | commit 格式
+# --- | ---
 # tapd-S1234  | #S1234, message
 # tapd-B1234  | #B1234, message
 # tapd-T1234  | #T1234, message
@@ -27,8 +27,8 @@ findTypeId() {
     return 1
   fi
 
-  TYPE_CHAR=$(echo ${TYPE_ID: 0: 1})
-  ID=$(echo ${TYPE_ID: 1})
+  TYPE_CHAR=$(echo "${TYPE_ID: 0: 1}")
+  ID=$(echo "${TYPE_ID: 1}")
 
   case "$TYPE_CHAR" in
     S) TYPE="story"

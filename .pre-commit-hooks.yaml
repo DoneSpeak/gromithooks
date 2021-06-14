@@ -6,3 +6,4 @@
   entry: pcm-issue-ref-prefix
   # 实现hook所使用的语言
   language: python
+  stages: [prepare-commit-msg]
