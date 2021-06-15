@@ -52,3 +52,6 @@ spring.log
 /venv*
 coverage-html
 dist
+
+.git_hooks/
+!.git_hooks/.gitkeeper

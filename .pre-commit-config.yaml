@@ -36,3 +36,53 @@ repos:
 #   - id: shellcheck
 #     # 排除文件
 #     exclude: git-hooks/multi-hooks/global/.*\.sample
+- repo: local
+  hooks:
+  - id: commit-msg
+    name: commit-msg (local)
+    entry: .git_hooks/commit-msg
+    language: script
+    stages: [commit-msg]
+    # verbose: true
+  - id: post-checkout
+    name: post-checkout (local)
+    entry: .git_hooks/post-checkout
+    language: script
+    stages: [post-checkout]
+    # verbose: true
+  - id: post-commit
+    name: post-commit (local)
+    entry: .git_hooks/post-commit
+    language: script
+    stages: [post-commit]
+    # verbose: true
+  - id: post-merge
+    name: post-merge (local)
+    entry: .git_hooks/post-merge
+    language: script
+    stages: [post-merge]
+    # verbose: true
+  - id: pre-commit
+    name: pre-commit (local)
+    entry: .git_hooks/pre-commit
+    language: script
+    stages: [commit]
+    # verbose: true
+  - id: pre-merge-commit
+    name: pre-merge-commit (local)
+    entry: .git_hooks/pre-merge-commit
+    language: script
+    stages: [merge-commit]
+    # verbose: true
+  - id: pre-push
+    name: pre-push (local)
+    entry: .git_hooks/pre-push
+    language: script
+    stages: [push]
+    # verbose: true
+  - id: prepare-commit-msg
+    name: prepare-commit-msg (local)
+    entry: .git_hooks/prepare-commit-msg
+    language: script
+    stages: [prepare-commit-msg]
+    # verbose: true
