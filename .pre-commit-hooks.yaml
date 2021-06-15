@@ -7,3 +7,20 @@
   # 实现hook所使用的语言
   language: python
   stages: [prepare-commit-msg]
+  verbose: true
+- id: pcm-tapd-ref-prefix
+  name: Add tapd reference prefix for commit msg
+  description: Add tapd reference prefix for commit msg
+  entry: pcm-tapd-ref-prefix
+  # 实现hook所使用的语言
+  language: python
+  stages: [prepare-commit-msg]
+  # 强制输出中间日志，这里不做配置，由用户在 .pre-commit-config.yaml 中指定
+  # verbose: true
+- id: cm-tapd-autoconnect
+  name: Add tapd reference for commit msg
+  description: Add tapd reference for commit msg to connect tapd and commit
+  entry: cm-tapd-autoconnect
+  # 实现hook所使用的语言
+  language: python
+  stages: [commit-msg]

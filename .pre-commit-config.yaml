@@ -36,9 +36,3 @@ repos:
 #   - id: shellcheck
 #     # 排除文件
 #     exclude: git-hooks/multi-hooks/global/.*\.sample
-- repo: https://github.com/DoneSpeak/gromithooks
-  rev: main
-  hooks:
-  - id: pcm-issue-ref-prefix
-    # 指定hook执行的阶段
-    stages: [prepare-commit-msg]
