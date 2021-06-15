@@ -62,12 +62,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     with open(commit_msg_filepath, 'r+') as f:
         content = f.read()
     if checkMsgHasTapdRef(content):
-        # print("There is tapd ref in commit message.")
+        print("There is tapd ref in commit message.")
         return
     tapd_id = findTapdIdFromBranch()
     if not tapd_id:
         showBranchNameFormatWarn()
-        # print("Tapd id not found in branch name.")
+        print("Tapd id not found in branch name.")
         return
     tapd_username = findTapdUsername()
     if not tapd_username:

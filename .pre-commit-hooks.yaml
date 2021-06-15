@@ -7,7 +7,6 @@
   # 实现hook所使用的语言
   language: python
   stages: [prepare-commit-msg]
-  verbose: true
 - id: pcm-tapd-ref-prefix
   name: Add tapd reference prefix for commit msg
   description: Add tapd reference prefix for commit msg

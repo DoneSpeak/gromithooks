@@ -20,7 +20,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not result:
         # 分支名不符合
         warning = "!WARN: Unable to add issue prefix since the format of the branch name dismatch."
-        warning += "!The branch should look like issue-<number> or issue-<number>-<other>, for example: issue-100012 or issue-10012-fix-bug)"
+        warning += "\n!The branch should look like issue-<number> or issue-<number>-<other>, for example: issue-100012 or issue-10012-fix-bug)"
         print(warning)
         return
     issue_number = result.group(1)
