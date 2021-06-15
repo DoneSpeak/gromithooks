@@ -17,7 +17,7 @@ def findTapdIdFromBranch():
     branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip().decode('utf-8')
 
     # 匹配如：tapd-123, tapd-1234-fix
-    result = re.match('^tapd-[STB](\d+)((-.*)+)?$', branch)
+    result = re.match('^tapd-([STB]\d+)((-.*)+)?$', branch)
     if not result:
         # 分支名不符合
         return None
@@ -27,7 +27,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     commit_msg_filepath = sys.argv[1]
     tapd_id = findTapdIdFromBranch()
     if not tapd_id:
-        warning = "\tWARN: Unable to add issue prefix since the format of the branch name dismatch."
+        warning = "\n\tWARN: Unable to add issue prefix since the format of the branch name dismatch."
         warning += "\n\tWARN: The branch name format shoud be [STB]<issue number>, example S100011"
         print(warning)
         return
