@@ -27,8 +27,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     commit_msg_filepath = sys.argv[1]
     tapd_id = findTapdIdFromBranch()
     if not tapd_id:
-        warning = "\n\tWARN: Unable to add issue prefix since the format of the branch name dismatch."
-        warning += "\n\tWARN: The branch name format shoud be [STB]<issue number>, example S100011"
+        warning = "!WARN: Unable to add issue prefix since the format of the branch name dismatch."
+        warning += "!The branch name format shoud be [STB]<issue number>, example S100011"
         print(warning)
         return
 

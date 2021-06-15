@@ -19,8 +19,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     result = re.match('^issue-(\d+)((-.*)+)?$', branch)
     if not result:
         # 分支名不符合
-        warning = "\n\tWARN: Unable to add issue prefix since the format of the branch name dismatch."
-        warning += "\n\tThe branch should look like issue-<number> or issue-<number>-<other>, for example: issue-100012 or issue-10012-fix-bug)"
+        warning = "!WARN: Unable to add issue prefix since the format of the branch name dismatch."
+        warning += "!The branch should look like issue-<number> or issue-<number>-<other>, for example: issue-100012 or issue-10012-fix-bug)"
         print(warning)
         return
     issue_number = result.group(1)

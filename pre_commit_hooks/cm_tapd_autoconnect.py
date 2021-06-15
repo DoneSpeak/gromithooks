@@ -4,7 +4,7 @@ from typing import Optional
 from typing import Sequence
 
 def findTapdUsername():
-    env_dist = os.enviro
+    env_dist = os.environ
     tapd_username = env_dist['TAPD_USERNAME']
     return tapd_username
 
