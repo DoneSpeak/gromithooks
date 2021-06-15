@@ -13,7 +13,7 @@ def findTapdIdFromBranch():
     branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip().decode('utf-8')
 
     # 匹配如：tapd-123, tapd-1234-fix
-    result = re.match('^tapd-[STB](\d+)((-.*)+)?$', branch)
+    result = re.match('^tapd-([STB]\d+)((-.*)+)?$', branch)
     if not result:
         # 分支名不符合
         return None
@@ -46,7 +46,7 @@ def extendTapdType(tapd_type_char: str):
     tapd_types = {
         'S' : "store",
         'T' : "task",
-        'N' : "bug"
+        'B' : "bug"
     }
     return tapd_types.get(tapd_type_char, None)
 
