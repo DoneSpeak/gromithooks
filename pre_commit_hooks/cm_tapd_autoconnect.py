@@ -1,12 +1,30 @@
+# 根据分支名，自动添加tapd关联字符串
+#
+# 添加环境变量：TAPD_USERNAME=donespeak
+#
+# 分支名  | commit 格式 | 绑定TAPD
+# --- | --- | ---
+# tapd-S1234  | #S1234, message  | --story=1234 --user=donespeak
+# tapd-B1234  | #B1234, message  | --bug=1234 --user=donespeak
+# tapd-T1234   | #T1234, message  | --task=1234 --user=donespeak
+# tapd-S1234-fix-bug  | #S1234, message  | --story=1234 --user=donespeak
+
 import sys, os, re
 from subprocess import check_output
 from typing import Optional
 from typing import Sequence
 
 def findTapdUsername():
-    env_dist = os.environ
-    tapd_username = env_dist['TAPD_USERNAME']
+    tapd_username = os.getenv('TAPD_USERNAME')
     return tapd_username
+
+def findTapdIdFromMsg(content: str):
+    # 匹配如：tapd-123, tapd-1234-fix
+    result = re.match('^#([STB]\d+)[^0-9a-zA-Z]', content)
+    if not result:
+        # 分支名不符合
+        return None
+    return result.group(1)
 
 def findTapdIdFromBranch():
     # 检测我们所在的分支
@@ -44,7 +62,7 @@ def showTapdUsernameRequireWarn():
 
 def extendTapdType(tapd_type_char: str):
     tapd_types = {
-        'S' : "store",
+        'S' : "story",
         'T' : "task",
         'B' : "bug"
     }
@@ -62,12 +80,14 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     with open(commit_msg_filepath, 'r+') as f:
         content = f.read()
     if checkMsgHasTapdRef(content):
-        print("There is tapd ref in commit message.")
+        # print("There is tapd ref in commit message.")
         return
-    tapd_id = findTapdIdFromBranch()
+    tapd_id = findTapdIdFromMsg(content)
+    if not tapd_id:
+        tapd_id = findTapdIdFromBranch()
     if not tapd_id:
         showBranchNameFormatWarn()
-        print("Tapd id not found in branch name.")
+        # print("Tapd id not found in branch name.")
         return
     tapd_username = findTapdUsername()
     if not tapd_username:
