@@ -53,5 +53,6 @@ spring.log
 coverage-html
 dist
 
+# 忽略.git_hooks中文件，使得其中的脚本不提交到代码仓库
 .git_hooks/
 !.git_hooks/.gitkeeper

@@ -41,6 +41,19 @@ preCommitInstall() {
     done
 }
 
+ignoreCustomizedGitHook() {
+    CUSTOMIZED_GITHOOK_DIR=".git_hooks/"
+    GITIGNORE_FILE=".gitignore"
+    if [ -f "$GITIGNORE_FILE" ]; then
+        if [ "$(grep -c "$CUSTOMIZED_GITHOOK_DIR" $GITIGNORE_FILE)" -ne '0' ]; then
+            # 判断文件中已经有配置
+            return;
+        fi
+    fi
+    echo -e "\n# 忽略.git_hooks中文件，使得其中的脚本不提交到代码仓库\n$CUSTOMIZED_GITHOOK_DIR\n!.git_hooks/.gitkeeper" >> $GITIGNORE_FILE
+}
+
 installPreCommit
 touchCustomizedGitHook
 preCommitInstall
+ignoreCustomizedGitHook
