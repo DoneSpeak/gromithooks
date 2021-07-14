@@ -18,17 +18,16 @@ findTypeIdFromBranch() {
   if [[ ! "$BRANCH" =~ $BRANCH_REX ]]; then
     return 1
   fi
-  local TYPE_ID=$(echo $BRANCH | tr -d $BRANCH_PREFIX | grep -Eo '^[SBT]{1}[0-9]+')
+  local TYPE_ID=$($BRANCH#$BRANCH_PREFIX | grep -Eo '^[SBT]{1}[0-9]+')
   findTypeId $TYPE_ID
 }
 
 findTypeIdFromMsg() {
   local MSG=$1
-  local TYPE_ID=$(echo $MSG | tr -cd '^(\#S|\#B|\#T)[0-9]+')
+  local TYPE_ID=$(echo $MSG | grep -Eo "^#[SBT]{1}[0-9]+" | tr -d '#')
   if [ -z $TYPE_ID ]; then
     return 1
   fi
-  TYPE_ID=$(echo ${TYPE_ID: 1})
 
   findTypeId $TYPE_ID
 }

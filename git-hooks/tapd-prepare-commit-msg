@@ -17,7 +17,7 @@ findTypeIdFromBranch() {
   if [[ ! "$BRANCH" =~ $BRANCH_REX ]]; then
     return 1
   fi
-  local TYPE_ID=$(echo $BRANCH | tr -d $BRANCH_PREFIX | grep -Eo '^[SBT]{1}[0-9]+')
+  local TYPE_ID=$(echo ${BRANCH#$BRANCH_PREFIX} | grep -Eo '^[SBT]{1}[0-9]+')
   findTypeId $TYPE_ID
 }
 
