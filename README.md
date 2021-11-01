@@ -116,3 +116,70 @@ tapd-S1234-fix-bug  | #S1234, message  | story 1234
 --- | ---
 issue-1234  | #1234, message
 issue-1234-fix-bug  | #1234, message
+
+## 个性化本地Hooks
+通过local repo功能可以增加**不提交到Github**的个性化本地hooks。
+
+```bash
+chmod +x install-git-hooks.sh
+./install-git-hooks.sh
+# intall with initializing customized hooks
+CUSTOMIZED=1 ./install-git-hooks.sh
+```
+
+执行完成之后，增加`.git_hooks`目录，并在`.pre-commit-config.yaml`中增加如下配置内容。
+
+```yaml
+- repo: local
+  hooks:
+  - id: commit-msg
+    name: commit-msg (local)
+    entry: .git_hooks/commit-msg
+    language: script
+    stages: [commit-msg]
+    # verbose: true
+  - id: post-checkout
+    name:  post-checkout (local)
+    entry: .git_hooks/post-checkout
+    language: script
+    stages: [post-checkout]
+    # verbose: true
+  - id: post-commit
+    name: post-commit (local)
+    entry: .git_hooks/post-commit
+    language: script
+    stages: [post-commit]
+    # verbose: true
+  - id: post-merge
+    name: post-merge (local)
+    entry: .git_hooks/post-merge
+    language: script
+    stages: [post-merge]
+    # verbose: true
+  - id: pre-commit
+    name: pre-commit (local)
+    entry: .git_hooks/pre-commit
+    language: script
+    stages: [commit]
+    # verbose: true
+  - id: pre-merge-commit
+    name: pre-merge-commit (local)
+    entry: .git_hooks/pre-merge-commit
+    language: script
+    stages: [merge-commit]
+    # verbose: true
+  - id: pre-push
+    name: pre-push (local)
+    entry: .git_hooks/pre-push
+    language: script
+    stages: [push]
+    # verbose: true
+  - id: prepare-commit-msg
+    name: prepare-commit-msg (local)
+    entry: .git_hooks/prepare-commit-msg
+    language: script
+    stages: [prepare-commit-msg]
+    # verbose: true
+```
+
+通过修改`.git_hooks`中存在的hook文件即可实现个性化的hook，这些hooks不会提交到gitlab服务器。
