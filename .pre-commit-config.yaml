@@ -9,7 +9,7 @@ repos:
   # 仓库的版本，可以直接用tag或者分支，但分支是容易发生变化的
   # 如果使用分支，则会在第一次安装之后不自动更新
   # 通过 `pre-commit autoupdate`指令可以将tag更新到默认分支的最新tag
-  rev: v4.0.1
+  rev: v4.1.0
   # 仓库中的hook id
   hooks:
   # 定义的hook脚本，在repo的.pre-commit-hooks.yaml中定义
@@ -22,7 +22,7 @@ repos:
   - id: check-merge-conflict
   - id: detect-private-key
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.0.0
+  rev: v2.3.0
   hooks:
   - id: pretty-format-yaml
     # https://github.com/macisamuele/language-formatters-pre-commit-hooks/blob/v2.0.0/language_formatters_pre_commit_hooks/pretty_format_yaml.py
