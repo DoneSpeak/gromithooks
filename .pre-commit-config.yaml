@@ -9,7 +9,7 @@ repos:
   # 仓库的版本，可以直接用tag或者分支，但分支是容易发生变化的
   # 如果使用分支，则会在第一次安装之后不自动更新
   # 通过 `pre-commit autoupdate`指令可以将tag更新到默认分支的最新tag
-  rev: v4.1.0
+  rev: v4.3.0
   # 仓库中的hook id
   hooks:
   # 定义的hook脚本，在repo的.pre-commit-hooks.yaml中定义
