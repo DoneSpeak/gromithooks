@@ -22,7 +22,7 @@ repos:
   - id: check-merge-conflict
   - id: detect-private-key
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.3.0
+  rev: v2.4.0
   hooks:
   - id: pretty-format-yaml
     # https://github.com/macisamuele/language-formatters-pre-commit-hooks/blob/v2.0.0/language_formatters_pre_commit_hooks/pretty_format_yaml.py
